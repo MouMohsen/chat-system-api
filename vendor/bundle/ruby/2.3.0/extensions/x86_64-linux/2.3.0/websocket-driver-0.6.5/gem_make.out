@@ -1,0 +1,15 @@
+current directory: /home/moumohsen/fsd/ror/chat-system-api/vendor/bundle/ruby/2.3.0/gems/websocket-driver-0.6.5/ext/websocket-driver
+/usr/bin/ruby2.3 -r ./siteconf20190710-13739-uw5fx.rb extconf.rb
+creating Makefile
+
+current directory: /home/moumohsen/fsd/ror/chat-system-api/vendor/bundle/ruby/2.3.0/gems/websocket-driver-0.6.5/ext/websocket-driver
+make "DESTDIR=" clean
+
+current directory: /home/moumohsen/fsd/ror/chat-system-api/vendor/bundle/ruby/2.3.0/gems/websocket-driver-0.6.5/ext/websocket-driver
+make "DESTDIR="
+compiling websocket_mask.c
+linking shared-object websocket_mask.so
+
+current directory: /home/moumohsen/fsd/ror/chat-system-api/vendor/bundle/ruby/2.3.0/gems/websocket-driver-0.6.5/ext/websocket-driver
+make "DESTDIR=" install
+/usr/bin/install -c -m 0755 websocket_mask.so ./.gem.20190710-13739-1xq4goq
