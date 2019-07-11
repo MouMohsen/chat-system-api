@@ -15,8 +15,9 @@ class MessagesController < ApplicationController
 
   # POST /chats/:chat_id/messages
   def create
-    @chat.messages.create!(message_params)
-    json_response(@chat, :created)
+    @message = @chat.messages.create!(message_params)
+    @chat.increment!(:messages_count, 1)
+    json_response(@message, :created)
   end
 
   # PUT /chats/:chat_id/messages/:id
@@ -28,24 +29,25 @@ class MessagesController < ApplicationController
   # DELETE /chats/:chat_id/messages/:id
   def destroy
     @message.destroy
+    @chat.decrement!(:messages_count, 1)
     head :no_content
   end
 
   private
 
   def message_params
-    params.permit(:number, :body)
+    params.permit(:message_number, :body)
   end
 
   def set_application
-    @application = Application.find(params[:application_id])
+    @application = Application.find_by! token: (params[:application_id])
   end
 
   def set_chat
-    @chat = @application.chats.find_by!(id: params[:chat_id]) if @application
+    @chat = @application.chats.find_by!(chat_number: params[:chat_id]) if @application
   end
 
   def set_chat_message
-    @message = @chat.messages.find_by!(id: params[:id]) if @chat
+    @message = @chat.messages.find_by!(message_number: params[:id]) if @chat
   end
 end

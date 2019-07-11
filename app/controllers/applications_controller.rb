@@ -34,10 +34,14 @@ class ApplicationsController < ApplicationController
 
  def application_params
    # whitelist params
-   params.permit(:token, :name, :chats_count)
+   generated_token = loop do
+     token = SecureRandom.hex(10)
+     break token unless Application.exists?(token: token)
+   end
+   params.permit(:name).merge(token: generated_token)
  end
 
  def set_application
-   @application = Application.find(params[:id])
+   @application = Application.find_by! token: (params[:id])
  end
 end

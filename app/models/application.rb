@@ -1,5 +1,5 @@
 class Application < ApplicationRecord
   has_many :chats, dependent: :destroy
 
-  validates_presence_of :token, :name, :chats_count
+  validates_presence_of :name
 end

@@ -5,6 +5,5 @@ RSpec.describe Chat, type: :model do
   it { should belong_to(:application) }
   it { should have_many(:messages).dependent(:destroy) }
   # Validation test
-  it { should validate_presence_of(:number) }
-  it { should validate_presence_of(:messages_count) }
+  it { should validate_presence_of(:chat_number) }
 end

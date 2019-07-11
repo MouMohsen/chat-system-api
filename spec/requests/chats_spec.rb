@@ -4,12 +4,13 @@ RSpec.describe 'Chats API' do
   # Initialize the test data
   let!(:application) { create(:application) }
   let!(:chats) { create_list(:chat, 20, application_id: application.id) }
-  let(:application_id) { application.id }
+  let(:application_token) { application.token }
+  let(:number) { chats.first.chat_number }
   let(:id) { chats.first.id }
 
-  # Test suite for GET /applications/:application_id/chats
-  describe 'GET /applications/:application_id/chats' do
-    before { get "/applications/#{application_id}/chats" }
+  # Test suite for GET /applications/:application_token/chats
+  describe 'GET /applications/:application_token/chats' do
+    before { get "/applications/#{application_token}/chats" }
 
     context 'when application exists' do
       it 'returns status code 200' do
@@ -22,7 +23,7 @@ RSpec.describe 'Chats API' do
     end
 
     context 'when application does not exist' do
-      let(:application_id) { 0 }
+      let(:application_token) { 'randomtoken' }
 
       it 'returns status code 404' do
         expect(response).to have_http_status(404)
@@ -34,9 +35,9 @@ RSpec.describe 'Chats API' do
     end
   end
 
-  # Test suite for GET /applications/:application_id/chats/:id
-  describe 'GET /applications/:application_id/chats/:id' do
-    before { get "/applications/#{application_id}/chats/#{id}" }
+  # Test suite for GET /applications/:application_token/chats/:number
+  describe 'GET /applications/:application_token/chats/:number' do
+    before { get "/applications/#{application_token}/chats/#{number}" }
 
     context 'when application chat exists' do
       it 'returns status code 200' do
@@ -44,12 +45,12 @@ RSpec.describe 'Chats API' do
       end
 
       it 'returns the chat' do
-        expect(json['id']).to eq(id)
+        expect(json['chat_number']).to eq(number)
       end
     end
 
     context 'when application chat does not exist' do
-      let(:id) { 0 }
+      let(:number) { 0 }
 
       it 'returns status code 404' do
         expect(response).to have_http_status(404)
@@ -61,12 +62,12 @@ RSpec.describe 'Chats API' do
     end
   end
 
-  # Test suite for PUT /applications/:application_id/chats
-  describe 'POST /applications/:application_id/chats' do
-    let(:valid_attributes) { { number: 1, messages_count: 0 } }
+  # Test suite for PUT /applications/:application_token/chats
+  describe 'POST /applications/:application_token/chats' do
+    let(:valid_attributes) { { chat_number: 258258 } }
 
     context 'when request attributes are valid' do
-      before { post "/applications/#{application_id}/chats", params: valid_attributes }
+      before { post "/applications/#{application_token}/chats", params: valid_attributes }
 
       it 'returns status code 201' do
         expect(response).to have_http_status(201)
@@ -74,23 +75,23 @@ RSpec.describe 'Chats API' do
     end
 
     context 'when an invalid request' do
-      before { post "/applications/#{application_id}/chats", params: {} }
+      before { post "/applications/#{application_token}/chats", params: {} }
 
       it 'returns status code 422' do
         expect(response).to have_http_status(422)
       end
 
       it 'returns a failure message' do
-        expect(response.body).to match(/Validation failed: Number can't be blank/)
+        expect(response.body).to match(/Validation failed: Chat number can't be blank/)
       end
     end
   end
 
-  # Test suite for PUT /applications/:application_id/chats/:id
-  describe 'PUT /applications/:application_id/chats/:id' do
-    let(:valid_attributes) { { number: 2 } }
+  # Test suite for PUT /applications/:application_token/chats/:number
+  describe 'PUT /applications/:application_token/chats/:number' do
+    let(:valid_attributes) { { chat_number: 21541 } }
 
-    before { put "/applications/#{application_id}/chats/#{id}", params: valid_attributes }
+    before { put "/applications/#{application_token}/chats/#{number}", params: valid_attributes }
 
     context 'when chat exists' do
       it 'returns status code 204' do
@@ -99,12 +100,12 @@ RSpec.describe 'Chats API' do
 
       it 'updates the chat' do
         updated_chat = Chat.find(id)
-        expect(updated_chat.number).to match(2)
+        expect(updated_chat.chat_number).to match(21541)
       end
     end
 
     context 'when the chat does not exist' do
-      let(:id) { 0 }
+      let(:number) { 52145 }
 
       it 'returns status code 404' do
         expect(response).to have_http_status(404)
@@ -116,9 +117,9 @@ RSpec.describe 'Chats API' do
     end
   end
 
-  # Test suite for DELETE /applications/:id
-  describe 'DELETE /applications/:id' do
-    before { delete "/applications/#{application_id}/chats/#{id}" }
+  # Test suite for DELETE /applications/:number
+  describe 'DELETE /applications/:number' do
+    before { delete "/applications/#{application_token}/chats/#{number}" }
 
     it 'returns status code 204' do
       expect(response).to have_http_status(204)
